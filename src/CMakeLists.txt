@@ -1,7 +1,10 @@
 # Add source to this project's executable.
 set(CMAKE_AUTOUIC ON)
-
-qt_add_executable(IGP "main.cpp")
+if(WIN32)
+	qt_add_executable(IGP WIN32 "main.cpp")
+else()
+	qt_add_executable(IGP "main.cpp")
+endif()
 
 add_subdirectory(app)
 

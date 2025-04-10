@@ -16,6 +16,13 @@ MainWindow::MainWindow() :
     setCentralWidget(widget);
 
     ui->scrollArea->setWidget(renderWidget);
+
+	// Create the custom color picker, connect to Renderer
+
+	picker = new ColorPicker( this ) ;
+	connect( picker, &ColorPicker::colorChanged, renderWidget, &Renderer::updateBrushColor ) ;
+	connect( picker, &ColorPicker::swappedButton, renderWidget, &Renderer::swapBrush ) ;
+	ui->layout->addWidget(picker) ;
     widget->setLayout(ui->layout);
 
 	signalMapper = new QSignalMapper(this);
@@ -30,8 +37,6 @@ MainWindow::MainWindow() :
 	updateStatus();
     statusBar()->addWidget(status);
 
-    connect(ui->scrollArea->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(update()));
-    connect(ui->scrollArea->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(update()));
     this->setWindowIcon(QIcon("./Resources/IGP.png"));
 	this->resize(startupSize());
 
@@ -168,8 +173,8 @@ void MainWindow::getColorCount()
 void MainWindow::setBrushColor()
 {
 	QColor color = QColorDialog::getColor(Qt::white, this, tr("Select Brush Color"));
-	if (color.isValid())
-		renderWidget->setBrushColor(color);
+	if( color.isValid() )
+		picker->overrideSelectedColor( color ) ;
 }
 
 void MainWindow::setEraser()
@@ -329,7 +334,7 @@ void MainWindow::createActions()
     connect(ui->actionFlip_Y, &QAction::triggered, this, &MainWindow::rotateFlipY) ;
 
 	// Zoom Actions
-    ui->actionZoom_In->setShortcut(QKeySequence::ZoomIn) ;
+    ui->actionZoom_In->setShortcut( QKeySequence( "Ctrl+=" ) ) ;
     connect(ui->actionZoom_In, &QAction::triggered, this, &MainWindow::zoomIn) ;
 
     ui->actionZoom_Out->setShortcut(QKeySequence::ZoomOut) ;

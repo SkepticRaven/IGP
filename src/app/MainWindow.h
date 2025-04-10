@@ -10,6 +10,7 @@
 #include "Renderer.h"
 #include "ResizeDialog.h"
 #include "ColorCountDialog.h"
+#include "ColorPicker.h"
 
 namespace Ui{
     class MainWindow;
@@ -56,6 +57,8 @@ public slots:
 private:
     Renderer *renderWidget;
     Ui::MainWindow *ui ;
+	// Custom Color Menu
+	ColorPicker *picker;
 
 	// Initalizer Functions
     void createActions();
